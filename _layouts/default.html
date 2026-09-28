@@ -1,340 +1,1116 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
 
-    <title>
-        {% if page.title %}
-            {{ page.title }} - {{ site.title }}
-        {% else %}
-            {{ site.title }}
-        {% endif %}
-    </title>
+<meta name="viewport"
+      content="width=device-width, initial-scale=1">
 
-    <style>
+<meta name="color-scheme"
+      content="light dark">
 
-        * {
-            box-sizing: border-box;
-        }
+<title>
+{% if page.title %}
+{{ page.title }} · {{ site.title }}
+{% else %}
+{{ site.title }}
+{% endif %}
+</title>
 
-        html {
-            scroll-behavior: smooth;
-        }
 
-        body {
-            margin: 0;
-            font-family:
-                -apple-system,
-                BlinkMacSystemFont,
-                "Segoe UI",
-                Roboto,
-                Helvetica,
-                Arial,
-                sans-serif;
+<style>
 
-            color: #24292f;
-            background: #ffffff;
-        }
+/* =========================================================
+   VARIABLES
+   ========================================================= */
 
-        .site {
-            display: flex;
-            min-height: 100vh;
-        }
+:root {
 
-        /* =========================
-           Sidebar
-           ========================= */
+    --bg: #ffffff;
+    --sidebar: #f7f8fa;
+    --surface: #ffffff;
 
-        .sidebar {
-            position: fixed;
+    --text: #1f2328;
+    --muted: #656d76;
 
-            top: 0;
-            left: 0;
-            bottom: 0;
+    --border: #d8dee4;
 
-            width: 280px;
+    --accent: #0969da;
+    --accent-bg: #ddf4ff;
 
-            overflow-y: auto;
+    --code-bg: #f6f8fa;
 
-            padding: 24px;
+    --shadow:
+        0 1px 2px rgba(0,0,0,.04);
+}
 
-            background: #f6f8fa;
 
-            border-right: 1px solid #d0d7de;
-        }
+[data-theme="dark"] {
 
-        .logo {
-            display: block;
+    --bg: #0d1117;
+    --sidebar: #161b22;
+    --surface: #0d1117;
 
-            margin-bottom: 20px;
+    --text: #e6edf3;
+    --muted: #8b949e;
 
-            color: #24292f;
+    --border: #30363d;
 
-            font-size: 20px;
-            font-weight: 700;
+    --accent: #58a6ff;
+    --accent-bg: #1f6feb33;
 
-            text-decoration: none;
-        }
+    --code-bg: #161b22;
 
-        .search {
-            width: 100%;
+    --shadow: none;
+}
 
-            padding: 9px 11px;
 
-            margin-bottom: 18px;
+/* =========================================================
+   RESET
+   ========================================================= */
 
-            border: 1px solid #d0d7de;
-            border-radius: 7px;
+* {
+    box-sizing: border-box;
+}
 
-            background: white;
 
-            font-size: 14px;
-        }
+html {
+    scroll-behavior: smooth;
+}
 
-        .nav {
-            margin: 0;
-            padding: 0;
-        }
 
-        .nav a {
-            display: block;
+body {
 
-            padding: 7px 10px;
+    margin: 0;
 
-            margin: 2px 0;
+    background: var(--bg);
 
-            border-radius: 6px;
+    color: var(--text);
 
-            color: #57606a;
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Helvetica,
+        Arial,
+        sans-serif;
 
-            text-decoration: none;
+    transition:
+        background .2s,
+        color .2s;
+}
 
-            font-size: 14px;
-        }
 
-        .nav a:hover {
-            background: #eaeef2;
-            color: #24292f;
-        }
+/* =========================================================
+   APP
+   ========================================================= */
 
-        .nav a.active {
-            background: #ddf4ff;
-            color: #0969da;
+.app {
 
-            font-weight: 600;
-        }
+    min-height: 100vh;
 
-        /* =========================
-           Main content
-           ========================= */
+    display: flex;
+}
 
-        .content {
-            width: 100%;
-            max-width: 900px;
 
-            margin-left: 280px;
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
 
-            padding: 50px;
-        }
+.sidebar {
 
-        .content h1 {
-            margin-top: 0;
+    position: fixed;
 
-            font-size: 36px;
-        }
+    inset: 0 auto 0 0;
 
-        .content h2 {
-            margin-top: 40px;
-        }
+    width: 290px;
 
-        .content h3 {
-            margin-top: 30px;
-        }
+    overflow-y: auto;
 
-        .content p,
-        .content li {
-            line-height: 1.7;
-        }
+    background: var(--sidebar);
 
-        .content a {
-            color: #0969da;
-        }
+    border-right:
+        1px solid var(--border);
 
-        .content img {
-            max-width: 100%;
-        }
+    z-index: 100;
+}
 
-        .content pre {
-            padding: 16px;
 
-            overflow-x: auto;
+.sidebar-inner {
 
-            border-radius: 8px;
+    padding: 24px 18px 40px;
+}
 
-            background: #24292f;
 
-            color: #ffffff;
-        }
+/* BRAND */
 
-        .content code {
-            font-family:
-                SFMono-Regular,
-                Consolas,
-                "Liberation Mono",
-                monospace;
-        }
+.brand {
 
-        .content :not(pre) > code {
-            padding: 3px 5px;
+    display: flex;
 
-            border-radius: 5px;
+    align-items: center;
 
-            background: #f6f8fa;
-        }
+    gap: 10px;
 
-        .content blockquote {
-            margin-left: 0;
+    margin-bottom: 22px;
 
-            padding-left: 16px;
+    padding: 0 8px;
 
-            border-left: 4px solid #d0d7de;
+    color: var(--text);
 
-            color: #57606a;
-        }
+    text-decoration: none;
 
-        /* =========================
-           Mobile
-           ========================= */
+    font-size: 19px;
 
-        @media (max-width: 800px) {
+    font-weight: 700;
+}
 
-            .site {
-                display: block;
-            }
 
-            .sidebar {
-                position: static;
+.brand-icon {
 
-                width: 100%;
+    width: 32px;
+    height: 32px;
 
-                border-right: 0;
-                border-bottom: 1px solid #d0d7de;
-            }
+    display: grid;
 
-            .content {
-                margin-left: 0;
+    place-items: center;
 
-                padding: 30px 20px;
-            }
-        }
+    border-radius: 8px;
 
-    </style>
+    background:
+        linear-gradient(
+            135deg,
+            #6366f1,
+            #06b6d4
+        );
+
+    color: white;
+
+    font-size: 15px;
+}
+
+
+/* SEARCH */
+
+.search-wrapper {
+
+    position: relative;
+
+    margin-bottom: 18px;
+}
+
+
+.search {
+
+    width: 100%;
+
+    padding:
+        10px
+        12px
+        10px
+        36px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 8px;
+
+    outline: none;
+
+    background: var(--surface);
+
+    color: var(--text);
+
+    font-size: 14px;
+}
+
+
+.search:focus {
+
+    border-color:
+        var(--accent);
+
+    box-shadow:
+        0 0 0 3px
+        var(--accent-bg);
+}
+
+
+.search-icon {
+
+    position: absolute;
+
+    left: 12px;
+
+    top: 50%;
+
+    transform:
+        translateY(-50%);
+
+    color: var(--muted);
+
+    pointer-events: none;
+}
+
+
+/* NAV */
+
+.nav-section {
+
+    margin-top: 22px;
+}
+
+
+.nav-section-label {
+
+    padding:
+        0 10px
+        7px;
+
+    color: var(--muted);
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    letter-spacing:
+        .08em;
+
+    text-transform:
+        uppercase;
+}
+
+
+.nav a {
+
+    display: block;
+
+    margin: 2px 0;
+
+    padding:
+        8px 10px;
+
+    border-radius: 7px;
+
+    color: var(--muted);
+
+    text-decoration: none;
+
+    font-size: 14px;
+
+    line-height: 1.4;
+
+    transition:
+        background .15s,
+        color .15s;
+}
+
+
+.nav a:hover {
+
+    background:
+        var(--accent-bg);
+
+    color:
+        var(--accent);
+}
+
+
+.nav a.active {
+
+    background:
+        var(--accent-bg);
+
+    color:
+        var(--accent);
+
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   TOPBAR
+   ========================================================= */
+
+.topbar {
+
+    position: fixed;
+
+    top: 0;
+
+    right: 0;
+
+    left: 290px;
+
+    height: 64px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-end;
+
+    padding:
+        0 28px;
+
+    background:
+        color-mix(
+            in srgb,
+            var(--bg) 90%,
+            transparent
+        );
+
+    backdrop-filter:
+        blur(12px);
+
+    border-bottom:
+        1px solid var(--border);
+
+    z-index: 50;
+}
+
+
+.theme-button {
+
+    width: 38px;
+    height: 38px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 8px;
+
+    background:
+        var(--surface);
+
+    color:
+        var(--text);
+
+    cursor: pointer;
+
+    font-size: 17px;
+
+    transition:
+        background .15s;
+}
+
+
+.theme-button:hover {
+
+    background:
+        var(--accent-bg);
+}
+
+
+/* =========================================================
+   MAIN
+   ========================================================= */
+
+.main {
+
+    width: calc(100% - 290px);
+
+    margin-left: 290px;
+
+    padding-top: 64px;
+
+    min-height: 100vh;
+}
+
+
+.content {
+
+    width: 100%;
+
+    max-width: 1200px;
+
+    margin: 0 auto;
+
+    padding:
+        55px
+        7vw
+        100px;
+}
+
+
+/* =========================================================
+   TYPOGRAPHY
+   ========================================================= */
+
+.content h1 {
+
+    margin:
+        0 0 25px;
+
+    font-size:
+        clamp(32px, 5vw, 48px);
+
+    line-height:
+        1.15;
+
+    letter-spacing:
+        -.025em;
+}
+
+
+.content h2 {
+
+    margin-top: 55px;
+
+    padding-bottom: 9px;
+
+    border-bottom:
+        1px solid var(--border);
+
+    font-size: 28px;
+}
+
+
+.content h3 {
+
+    margin-top: 38px;
+
+    font-size: 22px;
+}
+
+
+.content p {
+
+    line-height: 1.8;
+
+    font-size: 16px;
+}
+
+
+.content li {
+
+    margin: 7px 0;
+
+    line-height: 1.7;
+}
+
+
+.content a {
+
+    color:
+        var(--accent);
+}
+
+
+.content strong {
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   CODE
+   ========================================================= */
+
+.content pre {
+
+    padding: 20px;
+
+    overflow-x: auto;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 10px;
+
+    background:
+        var(--code-bg);
+
+    box-shadow:
+        var(--shadow);
+
+    line-height: 1.55;
+}
+
+
+.content code {
+
+    font-family:
+        "SFMono-Regular",
+        Consolas,
+        "Liberation Mono",
+        Menlo,
+        monospace;
+
+    font-size: .9em;
+}
+
+
+.content :not(pre) > code {
+
+    padding:
+        3px 6px;
+
+    border-radius: 5px;
+
+    background:
+        var(--code-bg);
+
+    border:
+        1px solid var(--border);
+}
+
+
+/* =========================================================
+   BLOCKQUOTE
+   ========================================================= */
+
+.content blockquote {
+
+    margin:
+        25px 0;
+
+    padding:
+        10px 20px;
+
+    border-left:
+        4px solid var(--accent);
+
+    color:
+        var(--muted);
+
+    background:
+        var(--code-bg);
+}
+
+
+/* =========================================================
+   TABLES
+   ========================================================= */
+
+.content table {
+
+    width: 100%;
+
+    border-collapse:
+        collapse;
+
+    margin:
+        25px 0;
+}
+
+
+.content th,
+.content td {
+
+    padding:
+        10px 13px;
+
+    border:
+        1px solid var(--border);
+
+    text-align: left;
+}
+
+
+.content th {
+
+    background:
+        var(--code-bg);
+}
+
+
+/* =========================================================
+   IMAGES
+   ========================================================= */
+
+.content img {
+
+    max-width: 100%;
+
+    height: auto;
+
+    border-radius: 8px;
+}
+
+
+/* =========================================================
+   HOME
+   ========================================================= */
+
+.hero {
+
+    padding:
+        30px 0 45px;
+}
+
+
+.hero h1 {
+
+    margin-bottom:
+        12px;
+}
+
+
+.hero-description {
+
+    max-width:
+        700px;
+
+    color:
+        var(--muted);
+
+    font-size:
+        19px !important;
+}
+
+
+.home-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fill,
+            minmax(240px, 1fr)
+        );
+
+    gap: 16px;
+}
+
+
+.note-card {
+
+    display: block;
+
+    padding: 20px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 10px;
+
+    background:
+        var(--surface);
+
+    color:
+        var(--text) !important;
+
+    text-decoration: none;
+
+    transition:
+        transform .15s,
+        border-color .15s,
+        box-shadow .15s;
+}
+
+
+.note-card:hover {
+
+    transform:
+        translateY(-2px);
+
+    border-color:
+        var(--accent);
+
+    box-shadow:
+        0 8px 25px
+        rgba(0,0,0,.08);
+}
+
+
+.note-card-title {
+
+    font-size: 17px;
+
+    font-weight: 650;
+
+    margin-bottom: 8px;
+}
+
+
+.note-card-path {
+
+    color:
+        var(--muted);
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+.mobile-header {
+
+    display: none;
+}
+
+
+@media (max-width: 850px) {
+
+    .sidebar {
+
+        transform:
+            translateX(-100%);
+
+        transition:
+            transform .2s;
+    }
+
+
+    .sidebar.open {
+
+        transform:
+            translateX(0);
+    }
+
+
+    .main {
+
+        width: 100%;
+
+        margin-left: 0;
+    }
+
+
+    .topbar {
+
+        left: 0;
+
+        padding:
+            0 16px;
+
+        justify-content:
+            space-between;
+    }
+
+
+    .mobile-menu {
+
+        display: block;
+
+        width: 38px;
+        height: 38px;
+
+        border:
+            1px solid var(--border);
+
+        border-radius: 8px;
+
+        background:
+            var(--surface);
+
+        color:
+            var(--text);
+
+        cursor: pointer;
+    }
+
+
+    .content {
+
+        padding:
+            40px 22px 80px;
+    }
+}
+
+
+@media (min-width: 851px) {
+
+    .mobile-menu {
+
+        display: none;
+    }
+}
+
+
+</style>
+
 </head>
 
 
 <body>
 
-<div class="site">
 
-    <aside class="sidebar">
-
-        <a class="logo"
-           href="{{ '/' | relative_url }}">
-            {{ site.title }}
-        </a>
+<div class="app">
 
 
-        <input
-            id="search"
-            class="search"
-            type="search"
-            placeholder="Search notes..."
-        >
+<!-- =====================================================
+     SIDEBAR
+     ===================================================== -->
+
+<aside class="sidebar" id="sidebar">
+
+<div class="sidebar-inner">
 
 
-        <nav class="nav">
+<a class="brand"
+   href="{{ '/' | relative_url }}">
 
-            {% assign pages_sorted = site.pages | sort: "path" %}
+<span class="brand-icon">
+N
+</span>
 
-            {% for p in pages_sorted %}
+<span>
+{{ site.title }}
+</span>
 
-                {% assign path = p.path %}
-
-                {% if path == "index.md" %}
-                    {% continue %}
-                {% endif %}
-
-                {% unless path contains "_layouts/" %}
-                {% unless path contains "_includes/" %}
-                {% unless path contains "_posts/" %}
-
-                    {% assign filename = p.name | remove: ".md" %}
-
-                    {% assign display_name =
-                        filename
-                        | replace: "-", " "
-                        | replace: "_", " "
-                    %}
-
-                    <a
-                        href="{{ p.url | relative_url }}"
-                        data-search="{{ display_name | downcase }}"
-                        class="{% if page.url == p.url %}active{% endif %}"
-                    >
-                        {{ display_name | capitalize }}
-                    </a>
-
-                {% endunless %}
-                {% endunless %}
-                {% endunless %}
-
-            {% endfor %}
-
-        </nav>
-
-    </aside>
+</a>
 
 
-    <main class="content">
+<div class="search-wrapper">
 
-        {{ content }}
+<span class="search-icon">
+⌕
+</span>
 
-    </main>
+<input
+    id="search"
+    class="search"
+    type="search"
+    placeholder="Search notes..."
+    autocomplete="off"
+/>
+
+</div>
+
+
+<nav class="nav"
+     id="navigation">
+
+
+<a href="{{ '/' | relative_url }}"
+   class="{% if page.url == '/' %}active{% endif %}">
+
+Home
+
+</a>
+
+
+{% assign all_pages = site.pages | sort: "path" %}
+
+
+{% for item in all_pages %}
+
+    {% assign item_path = item.path %}
+
+    {% if item_path contains ".md" %}
+
+        {% unless item_path == "index.md" %}
+
+            {% assign item_name =
+                item.name
+                | remove: ".md"
+                | replace: "-", " "
+                | replace: "_", " "
+            %}
+
+            <a
+                href="{{ item.url | relative_url }}"
+                data-search="{{ item_name | downcase }}"
+                class="{% if page.url == item.url %}active{% endif %}"
+            >
+
+                {{ item_name | capitalize }}
+
+            </a>
+
+        {% endunless %}
+
+    {% endif %}
+
+{% endfor %}
+
+
+</nav>
+
+
+</div>
+
+</aside>
+
+
+<!-- =====================================================
+     MAIN
+     ===================================================== -->
+
+<div class="main">
+
+
+<header class="topbar">
+
+
+<button
+    class="mobile-menu"
+    id="mobileMenu"
+    aria-label="Open menu">
+
+☰
+
+</button>
+
+
+<button
+    class="theme-button"
+    id="themeButton"
+    aria-label="Toggle dark mode">
+
+☾
+
+</button>
+
+
+</header>
+
+
+<main class="content">
+
+{{ content }}
+
+</main>
+
+
+</div>
+
 
 </div>
 
 
 <script>
 
-const search = document.getElementById("search");
+/* =========================================================
+   THEME
+   ========================================================= */
 
-search.addEventListener("input", function () {
+const themeButton =
+    document.getElementById("themeButton");
 
-    const query = this.value.toLowerCase().trim();
+const savedTheme =
+    localStorage.getItem("theme");
 
-    const links =
-        document.querySelectorAll(".nav a");
+if (savedTheme === "dark") {
 
-    links.forEach(function (link) {
+    document.documentElement
+        .setAttribute(
+            "data-theme",
+            "dark"
+        );
 
-        const name =
-            link.dataset.search || "";
+    themeButton.textContent = "☀";
 
-        if (name.includes(query)) {
-            link.style.display = "";
+}
+
+
+themeButton.addEventListener(
+    "click",
+    function () {
+
+        const dark =
+            document.documentElement
+                .getAttribute("data-theme")
+                === "dark";
+
+        if (dark) {
+
+            document.documentElement
+                .removeAttribute("data-theme");
+
+            localStorage.setItem(
+                "theme",
+                "light"
+            );
+
+            themeButton.textContent = "☾";
+
         } else {
-            link.style.display = "none";
+
+            document.documentElement
+                .setAttribute(
+                    "data-theme",
+                    "dark"
+                );
+
+            localStorage.setItem(
+                "theme",
+                "dark"
+            );
+
+            themeButton.textContent = "☀";
+
         }
 
-    });
+    }
+);
 
-});
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+
+const search =
+    document.getElementById("search");
+
+const nav =
+    document.getElementById("navigation");
+
+
+search.addEventListener(
+    "input",
+    function () {
+
+        const query =
+            this.value
+                .toLowerCase()
+                .trim();
+
+        const links =
+            nav.querySelectorAll(
+                "a[data-search]"
+            );
+
+        links.forEach(
+            function (link) {
+
+                const name =
+                    link.dataset.search;
+
+                link.style.display =
+                    name.includes(query)
+                        ? ""
+                        : "none";
+
+            }
+        );
+
+    }
+);
+
+
+/* =========================================================
+   MOBILE MENU
+   ========================================================= */
+
+const sidebar =
+    document.getElementById("sidebar");
+
+const mobileMenu =
+    document.getElementById("mobileMenu");
+
+
+mobileMenu.addEventListener(
+    "click",
+    function () {
+
+        sidebar.classList.toggle(
+            "open"
+        );
+
+    }
+);
+
 
 </script>
+
 
 </body>
 

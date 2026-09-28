@@ -1,16 +1,47 @@
 ---
-layout: home
-title: My Notes
+layout: default
+title: Home
 ---
 
-Welcome to my notes.
+<div class="hero">
 
-{% assign notes = site.static_files | where_exp: "file", "file.path contains '.md'" %}
+<h1>My Notes</h1>
 
-## Notes
+<p class="hero-description">
+A collection of notes, algorithms, ideas and documentation.
+</p>
 
-{% for file in notes %}
-{% unless file.path contains "index.md" %}
-- [{{ file.basename | replace: "-", " " | capitalize }}]({{ file.path | relative_url }})
+</div>
+
+<div class="home-grid">
+
+{% assign notes = site.pages | sort: "path" %}
+
+{% for note in notes %}
+
+{% assign path = note.path %}
+
+{% if path contains ".md" %}
+{% unless path == "index.md" %}
+
+{% assign name = note.name | remove: ".md" %}
+{% assign title = name | replace: "-", " " | replace: "_", " " %}
+
+<a class="note-card" href="{{ note.url | relative_url }}">
+
+<div class="note-card-title">
+{{ title | capitalize }}
+</div>
+
+<div class="note-card-path">
+{{ note.path }}
+</div>
+
+</a>
+
 {% endunless %}
+{% endif %}
+
 {% endfor %}
+
+</div>

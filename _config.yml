@@ -1,11 +1,15 @@
 title: My Notes
-description: My Markdown notes
-theme: minima
+description: My personal notes
 
 markdown: kramdown
 
-# Make Markdown files available as pages.
-collections:
-  notes:
-    output: true
-    permalink: /:name/
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+
+exclude:
+  - setup_pages.py
+  - Gemfile
+  - Gemfile.lock
+  - vendor
+  - README.md

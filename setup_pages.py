@@ -554,20 +554,47 @@ body {
     min-height: 100vh;
 }
 
+.main {
 
+    flex: 1;
+
+    width: auto;
+
+    margin-left: 290px;
+
+    padding-top: 64px;
+
+    min-height: 100vh;
+}
 .content {
 
     width: 100%;
 
     max-width: 1200px;
-
+  max-width: none;
+  
     margin: 0 auto;
-
+ margin: 0;
     padding:
         55px
         7vw
         100px;
 }
+
+.content {
+
+    width: 100%;
+
+    max-width: none;
+
+    margin: 0;
+
+    padding:
+        55px
+        5vw
+        100px;
+}
+
 
 
 /* =========================================================

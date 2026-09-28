@@ -1,0 +1,11 @@
+title: My Notes
+description: My Markdown notes
+theme: minima
+
+markdown: kramdown
+
+# Make Markdown files available as pages.
+collections:
+  notes:
+    output: true
+    permalink: /:name/
